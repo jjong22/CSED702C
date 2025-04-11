@@ -1,0 +1,1 @@
+scp -r -P 7022 lab04@141.223.181.16:~/ret-to-env/target ~/POSTECH/CSED702C/Lab4/Prob3

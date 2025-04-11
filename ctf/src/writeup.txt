@@ -1,0 +1,61 @@
+* Bug: srand() vulunability & stack buffer overflow.
+
+1. stack buffer overflow.
+
+  char buffer[0x100] = { 0, };
+  ...
+  gets(buffer);
+
+  `gets()` allows the buffer to be overflown.
+
+  If we search for the security method of 'target';
+
+[*] 'target'
+    Arch:       i386-32-little
+    RELRO:      Partial RELRO
+    Stack:      Canary found
+    NX:         NX enabled
+    PIE:        No PIE (0x8048000)
+    Stripped:   No
+    Debuginfo:  Yes
+
+  there is Canary for stack protection.
+
+  in x86 architecture, Canary is 4bytes with '\0'.
+  
+  When we execute the binary file, we can put input only once,
+  so we can not leak the Canary by the input.
+
+  Theoretically, the all possible case of x86 Canary with '\0' is random 3 bytes.
+  All case is 2 ^ (8 * 3) = 16,777,216. 
+  Canary changes every time we execute the binary.
+  Therefore, the rate of getting Canary is right = 1 / 16,777,216.
+  It is possible, but very long time will be needed.
+ 
+ 
+2. srand() vulunability
+
+  random_state is from '/dev/urandom',
+  srand(time(NULL) + random_state); // clear rand when start program! you cant predict random XD
+  ...
+  int tmp = (rand() % 45 + 1);
+
+  6 random numbers are maded by these code.
+  we can get time(NULL) with c code, but the we can't find (random_state) from '/dev/urandom'
+  and state of srand() is updated when check_lotto_number() is called.
+
+  int srand(time(NULL) + random_state);
+  random_state is fixed, and time(NULL) is get from preset time (second).
+  So, we can get exactly same state when second is not change.
+
+  try 0 |  input : 1 / system : 37
+  Oh, we cound't get a lotto ;(
+    
+  system show the random number, so we get all 6 numbers with 6 try.
+
+  payload (fastly!)
+  1) enter any number, and get 1st lotto number.
+  2) enter leaked 1st lotto number + any number, and get 2nd lotto number.
+  3) repeat until 6rd lotto number.
+  4) enter all 6 lotto number.
+  5) profit!

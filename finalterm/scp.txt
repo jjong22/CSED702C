@@ -1,0 +1,1 @@
+scp -P 7022 lab09@141.223.181.16:/home/(here) /home/jjong22/POSTECH/CSED702C/finalterm/

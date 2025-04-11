@@ -1,0 +1,41 @@
+# MiniCTF Template
+
+This template is designed to guide you in developing and submitting MiniCTF
+challenges.
+
+## Directory Structure and Contents
+
+* meta/: Challenge metadata
+  * title: Title of your challenge (use only printable characters)
+  * desc: Challenge description. You can include hints or references
+  * authors: Student ids and full names of all team members
+  * flag: Flag string. Must be in format: CSED702C{something}
+
+* src/: Source code, build script, and exploit
+  * target.c: Challenge source code
+  * Makefile: Build script for compiling the challenge
+  * exploit.py: Exploit script
+  * writeup.txt: Detailed write-up of your solution
+
+* release/: Everything in this folder will be published to the CTF server
+  * By default, `desc`, `flag`, and `target` will be included
+  * Permissions will be set such that `flag` is only accessible through the
+    shell spawned by `target`
+  * If you want to release both source and binary, copy both `target.c` and
+    `target` into this directory.
+
+## Building and Testing
+* Modify `Makefile` to specify desired compilation flags (`CFLAGS += ...`)
+* Compile `target.c` on our CTF server by running `make` under a tmp directory
+* Verify that the compiled `target` runs without errors
+* Your `exploit.py` should successfully spawn a shell or print the contents of
+  `flag` when run against the compiled `target`
+
+## Submission
+Compress the entire directory as `chal_title.zip` and submit to PLMS. Only one
+submission per team is needed - does not matter who submits.
+
+## Resources
+- [Awesome CTF resources](https://github.com/devploit/awesome-ctf-resources)
+- [CTFs & Wargames](https://github.com/rmusser01/Infosec_Reference/blob/master/Draft/CTFs_Wargames.md)
+

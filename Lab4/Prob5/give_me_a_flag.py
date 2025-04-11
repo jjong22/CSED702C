@@ -1,0 +1,1 @@
+print("\xd0\xdd\xff\xff")
